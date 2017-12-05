@@ -1,0 +1,29 @@
+galaxy_info:
+  author: Sébastien Elet
+  description: Setup minio server
+  company: SimpliField
+  license: BSD
+  min_ansible_version: 2+
+  platforms:
+  - name: Ubuntu
+    versions:
+    - trusty
+    - utopic
+    - vivid
+    - wily
+    - xenial
+  galaxy_tags:
+    - minio
+    - objectstorage
+    - s3
+    - gcs
+dependencies:
+- role: SimpliField.users
+  users:
+  - miniouser:
+    name: "{{ minio_user }}"
+    comment: "minio user"
+    createhome: "no"
+    shell: "/bin/false"
+  tags:
+  - minio

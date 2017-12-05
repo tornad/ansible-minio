@@ -1,0 +1,43 @@
+---
+- name: download minio
+  get_url:
+    url: "{{ minio_download_url }}"
+    dest: "{{ minio_bin }}"
+    owner: "{{ minio_user }}"
+    group: "{{ minio_group }}"
+    mode: 0755
+  tags:
+  - minio
+
+- name: generate the minio envfile
+  template:
+    src: minio.env.j2
+    dest: "{{ minio_envfile }}"
+  notify: restart minio
+  tags:
+  - minio
+
+- name: create the minio systemd config
+  template:
+    src: systemd.service.j2
+    dest: "{{ minio_systemd_units_dir }}/minio.service"
+  when: ansible_service_mgr == "systemd"
+  tags:
+  - minio
+
+- name: create the minio init.d config
+  template:
+    src: init.j2
+    dest: "{{ minio_initd_conf_dir }}/minio"
+    mode: 0755
+  when: ansible_service_mgr != "systemd"
+  tags:
+  - minio
+
+- name: enable and start the minio service
+  service:
+    name: minio
+    state: started
+    enabled: yes
+  tags:
+  - minio
