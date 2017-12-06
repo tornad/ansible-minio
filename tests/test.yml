@@ -1,5 +1,28 @@
 ---
 - hosts: localhost
   remote_user: root
+
+  roles:
+  - role: SimpliField.users
+    users:
+    - miniouser:
+      name: "minio"
+      comment: "minio user"
+      createhome: "yes"
+      shell: "/bin/false"
+  - role: SimpliField.path
+    path: "/data-objects"
+    owner: "minio"
+    group: "minio"
+
+- hosts: localhost
+  remote_user: root
+
+  vars:
+    minio_datadirs:
+    - /data-objects
+    minio_access_key: "admin"
+    minio_secret_key: "mysecretkey"
+
   roles:
   - role_under_test
