@@ -30,15 +30,23 @@ STOP_SCHEDULE="${STOP_SCHEDULE:-QUIT/5/TERM/5/KILL/5}"
 # Read configuration variable file if it is present
 [ -r "{{ minio_envfile }}" ] && . {{ minio_envfile }}
 
+{% if minio_gcs_gateway == true %}
+DAEMON_ARGS="gateway $MINIO_OPTS $MINIO_VOLUMES"
+{% else %}
 [ -n "${MINIO_VOLUMES}" ] || log_daemon_msg "Variable MINIO_VOLUMES not set in {{ minio_envfile }}"
 
 DAEMON_ARGS="server $MINIO_OPTS $MINIO_VOLUMES"
+{% endif %}
 
 # Set the ulimits
 ulimit -n 8192
 
 start() {
   $USERBIND $DAEMON
+  {% if minio_gcs_gateway == true %}
+  export GOOGLE_APPLICATION_CREDENTIALS=$GOOGLE_APPLICATION_CREDENTIALS
+  {% endif %}
+
   export MINIO_ACCESS_KEY=$MINIO_ACCESS_KEY
   export MINIO_SECRET_KEY=$MINIO_SECRET_KEY
   start-stop-daemon --start \
