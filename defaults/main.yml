@@ -10,3 +10,7 @@ minio_access_key: ""
 minio_secret_key: ""
 minio_systemd_units_dir: /lib/systemd/system
 minio_initd_conf_dir: /etc/init.d
+
+minio_gcs_gateway: false
+minio_gcs_project_id: ''
+minio_gcs_credentials: ''
