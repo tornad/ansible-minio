@@ -1,7 +1,7 @@
 Minio server
 =========
 
-> Setup a [minio] server
+Setup a [minio] server
 
 Requirements
 ------------
